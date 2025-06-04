@@ -61,8 +61,8 @@
     <dependency>
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-java-sdk-ses</artifactId>
-      <version>1.12.783</version>
-  </dependency>
+      <version>1.12.785</version>
+    </dependency>
   </dependencies>
 
   <build>
