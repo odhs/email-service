@@ -1,0 +1,56 @@
+---
+config:
+  theme: redux-dark
+title: Email Sender
+---
+classDiagram
+direction BT
+  namespace CORE {
+    class EmailSenderUseCase {
+        +sendEmail(to: String, subject: String, body: String)
+    }
+    class EmailRequest {
+        +to: String
+        +subject: String
+        +body: String
+    }
+    class EmailServiceException {
+    }
+  }
+  namespace APPLICATION {
+    class EmailSenderService {
+     -emailSenderGateway: EmailSenderGateway
+     +sendEmail(to: String, subject: String, body: String)
+    }
+  }
+  namespace ADAPTERS {
+    class EmailSenderGateway {
+     +sendEmail(to: String, subject: String, body: String)
+    }
+  }
+  namespace INFRA {
+    class AwsSesEmailSender {
+      -amazonSimpleEmailService: AmazonSimpleEmailService
+      +sendEmail(to: String, subject: String, body: String)
+    }
+    class AwsSesConfig {
+      +amazonSimpleEmailService() : AmazonSimpleEmailService
+    }
+  }
+  namespace CONTROLLERS {
+    class EmailSenderController {
+      -emailSenderService: EmailSenderService
+      +sendEmail(request: EmailRequest) : ResponseEntity
+    }
+  }
+  class RuntimeException {
+  }
+
+<<interface>> EmailSenderUseCase
+<<interface>> EmailSenderGateway
+
+EmailSenderService --> EmailSenderUseCase
+AwsSesEmailSender --> EmailSenderGateway
+EmailSenderService --> EmailSenderGateway
+EmailSenderController --> EmailSenderService
+EmailServiceException --> RuntimeException
