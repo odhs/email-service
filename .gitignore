@@ -34,3 +34,13 @@ build/
 
 ### OTHERS ###
 .zip
+
+### Configs
+*.env
+*.csv
+*.bat
+*.sh
+*.ps1
+
+### REST Client
+*.http
