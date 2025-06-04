@@ -1,75 +1,172 @@
-#
+# Exemplo de Microsserviço _Amazon Simple Service Email_ em _Java Springboot_
 
-## Arquitetura
+O [README.md](docs/README.md) completo encontra-se em `docs/README.md`.
 
-Core -> Application -> <Gateway> -> Adapters
+Este projeto é um microsserviço desenvolvido em _Java Spring Boot_ que utiliza o _Amazon Simple Email Service (SES)_ para envio de emails. Ele segue o padrão de arquitetura _Clean Architecture_, permitindo flexibilidade para trocar o provedor de email no futuro.
 
-### CORE
+---
 
-É o núcleo da aplicação.
+## 📋 Funcionalidades
 
-- Regras de negócio
-- Casos de uso
-- Define o que o app faz, mas não como ele faz.
+- Envio de emails utilizando o _Amazon SES_.
+- Estrutura modular baseada em _Clean Architecture_.
+- Suporte para múltiplos provedores de email (ex.: _SendGrid_, _Mailgun_, etc.).
+- Configuração de credenciais via variáveis de ambiente.
 
-```java
-public interface EmailSenderUseCase {
-  void sendEmail(String to, String subject, String body);
+---
+
+## 🛠️ Tecnologias Utilizadas
+
+- **Java 24**
+- **Spring Boot 3.x**
+- **Amazon SES SDK**
+- **Maven**
+- **Lombok**
+
+---
+
+## 🚀 Como Executar o Projeto
+
+### Pré-requisitos
+
+- **_Java 24_** ou superior instalado. [Java 24 Download](https://jdk.java.net/24/).
+- **_Maven_** instalado _ou_ uma IDE como [VSCode](https://code.visualstudio.com/)(com Extensões para _SpringBoot_) ou  [IntelliJ IDEA](https://www.jetbrains.com/pt-br/idea/)
+- Conta na **AWS** com o serviço _SES_ configurado.
+- Configuração das variáveis de ambiente para as credenciais da AWS.
+
+### Configuração das Variáveis de Ambiente
+
+Preencha as variáveis de ambiente em um arquivo `.env` na raiz do projeto, você pode usar o arquivo `.env-sample` como exemplo.
+
+```sh
+# AWS Credentials
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_KEY=
+AWS_REGION=us-east-1
+# Email Configuration
+EMAIL_SOURCE=
+```
+
+Ou defina as variáveis de ambiente no seu sistema:
+
+- `AWS_ACCESS_KEY_ID`: Chave de acesso da AWS.
+- `AWS_SECRET_KEY`: Chave secreta da AWS.
+- `AWS_REGION`: Região onde o serviço _SES_ está configurado (ex.: `us-east-1`).
+- `EMAIL_SOURCE`: Endereço de email verificado no _SES_ para envio.
+
+#### No Windows (PowerShell)
+
+```powershell
+$Env:AWS_ACCESS_KEY_ID = "sua_access_key_id"
+$Env:AWS_SECRET_KEY = "sua_secret_key"
+$Env:AWS_REGION = "us-east-1"
+$Env:EMAIL_SOURCE = "seu_email_verificado@exemplo.com"
+```
+
+#### No Linux/macOS
+
+```bash
+export AWS_ACCESS_KEY_ID="sua_access_key_id"
+export AWS_SECRET_KEY="sua_secret_key"
+export AWS_REGION="us-east-1"
+export EMAIL_SOURCE="seu_email_verificado@exemplo.com"
+```
+
+### Executando a Aplicação
+
+1. Clone o repositório:
+
+   ```bash
+   git clone https://github.com/seu-usuario/email-service.git
+   cd email-service
+   ```
+
+2. Compile e execute o projeto com o Maven:
+
+   ```bash
+   mvn clean package
+   java -jar target/email_service-0.0.1-SNAPSHOT.jar
+   ```
+
+3. Acesse a aplicação em:  
+   [http://localhost:8080](http://localhost:8080)
+
+---
+
+## 📬 Testando o Envio de Email
+
+Envie uma requisição `POST` para o endpoint `/api/v1/email/send` com o seguinte corpo:
+
+```json
+{
+  "to": "destinatario@exemplo.com",
+  "subject": "Teste de Email",
+  "body": "Este é um email de teste enviado pelo microsserviço."
 }
 ```
 
-Então aqui temos o alto nível, é o que a aplicação faz porém sem importar como.
+Exemplo de comando `curl`:
 
-### APPLICATION
-
-Na camada da aplicação temos a implementação dos casos de uso da camada CORE. A camada application só conhece a camada CORE.
-
-```java
-public class EmailSenderService implements EmailSenderUseCase {
-
-  @Override
-    public void sendEmail(String recipient, String subject, String body) {
-
-  private final EmailSenderGateway emailSenderGateway;
-
-    public EmailSenderService(EmailSenderGateway emailSenderGateway) {
-        this.emailSenderGateway = emailSenderGateway;
-      }
-    }
-}
+```bash
+curl -X POST http://localhost:8080/api/v1/email/send \
+-H "Content-Type: application/json" \
+-d '{
+  "to": "destinatario@exemplo.com",
+  "subject": "Teste de Email",
+  "body": "Este é um email de teste enviado pelo microsserviço."
+}'
 ```
 
-### ADAPTER
+---
 
-Existe para que a camada de application não dependa diretamente da implementação externa, no caso, o pacote da AWS, isso permite que no futuro a AWS poderá ser subsituída sem prejuízos para a aplicação.
+## 🧱 Arquitetura
 
-Embora pareça o mesmo método do UseCase a diferença é que aqui é contrato, e o UseCase é o alto nível da aplicação.
+O projeto segue o padrão _Clean Architecture_, com as seguintes camadas:
 
-```java
-public interface EmailSenderGateway {
-  void sendEmail(String to, String subject, String body);
-}
-```
+1. **Core**: Contém as regras de negócio e casos de uso.
+2. **Application**: Implementa os casos de uso definidos no Core.
+3. **Adapters**: Define interfaces para comunicação com serviços externos.
+4. **Infra**: Implementa as interfaces dos Adapters, como o cliente AWS SES.
+5. **Controllers**: Exposição de endpoints REST para interação com o sistema.
 
-## DICAS
+### Diagrama de Classes
 
-O Maven, por padrão, salva os pacotes Java (arquivos JAR) numa pasta local no seu computador, geralmente em ~/.m2/repository (em sistemas Unix/Linux/macOS) ou C:\Users\<username>\.m2\repository (em Windows). Essa pasta é o repositório local do Maven.
+![Diagrama de Classes](docs/uml/diagrama_classes.png)
 
-## GIT
+Veja também o diagrama de classes feito em:
 
-### Types
+- [PlantUML](http://www.plantuml.com/plantuml/duml/hLD1pzem3BttLrZV2RI1Tja5JGY4gcbNglq0axfTHffaiJl66Fzz6LLfKUY97NheY_tytekpOS4WRMCoGvM0E0Yw_YPGwa1AjBCP7xNr6B01wqfYyl3nG-PH7R4cUDkvG6zmoG2q5GeLAeAyGMqAiYM5hqmxPBeL0Bm3ZkZjU2Pk1OK4RUltmEtXEoaPW8Chp_tVFBPUuwSCCdVSU_hH4ikTTU3gW37X21spfgG5XPzQKVvBaRyPlsQ3pQttHYlyXqUtG-FWj6lldIw0XgFFA7J2E3fFi5TZUT1OeXSAd5n7CXKk_tFk5ri57AUoFN51F1fx3mKR_ErieHjlQ1pw2hOJ9wyAVTIqSxRITMz_KiviFYqeiHyv9JXZAF34QWmLpxQZZs3SCMK-T8k_UdW6KUoUs3lBb5lHSlxK1R3kfQR4i5p-MJzvfrbwTLrbkhXFI1UBoSeaYQuuTRo9VsrZ_W80)
+  - PNG: `docs/uml/diagrama_classes.png`
+  - SVG: `docs/uml/diagrama_classes.svg`
+  - Source: `docs/uml/diagrama_classes.wsd`
 
-Using [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/#specification)
+- [Mermaid](https://www.mermaidchart.com/play?utm_source=mermaid_live_editor&utm_medium=toggle#pako:eNqtVNFOwjAU_ZWGJ4juBxZCMuc0JATIhm99KdsFq1uHbVGR-O-2G7Pt2IgJ7qnrPfec03t7exykZQYDf-B5HmZpyTZ062OGkHyGAnzEIdt_ehnhr5hJKnO1FRWE5igBlgHHrM7LiRD3lGw5KTDLKIdU0pKhuxVmWDJSgNiRFFC4iCN01PT1V-XVhDXfk4CQCNAYLBvUjVCxCjSUpY8SySnb3iKxX78oHbOxLrND8zcyIt-dejG87UHIlpLhdw24Uk7MVrVEm0XPYfk7TSH6TGFXFerYztQSyrgpXbBczqZhsJou5g36rHonWnMmD0zwkUj4IAffTjjtNfArCq28unbvg-UqipNerydp4_Vqcb0yBqbzhzhw1YMPkYCwPFiFIgX5KllCi10Odot8FPRE_sd3211YTaBVlT5jwxG65M2id_oSLuareDGbXWqN8iB5medOgeDsmvkdV6-jKLweNN8ZO20-VpZKJiDSD8uh3cnaVbxXweJ8UBRIS43HlEngG3WyyaTjHbmIMZe_ouyYI8_rJtXw88vUQv_S_428D241o5Xh9Lr7WdEZ7RJiNvj-AQAwA_E)
+  - Source: `docs/uml/diagrama_classes.nmd`
 
-- API or UI relevant changes
-- `WIP` Commits, that add implementations only to save
-- `feat` Commits, that add or remove a new feature to the API or UI
-- `fix` Commits, that fix an API or UI bug of a preceded `feat` commit
-- `refactor` Commits, that rewrite/restructure your code, however do not change any API or UI behaviour
-- `perf` Commits are special `refactor` commits, that improve performance
-- `style` Commits, that do not affect the meaning (white-space, formatting, missing semi-colons, etc)
-- `test` Commits, that add missing tests or correcting existing tests
-- `docs` Commits, that affect documentation only
-- `build` Commits, that affect build components like build tool, ci pipeline, dependencies, project version, ...
-- `ops` Commits, that affect operational components like infrastructure, deployment, backup, recovery, ...
-- `chore` Miscellaneous commits e.g. modifying `.gitignore`
+---
+
+## 📝 TODO
+
+- **Adicionar suporte a múltiplos provedores de email**:
+  - Implementar integração com provedores como _SendGrid_, _Mailgun_ e _SparkPost_.
+  - Criar uma lógica de fallback para alternar automaticamente entre provedores caso um deles falhe.
+  - Garantir que o serviço possa ser transferido rapidamente para outro provedor sem afetar os clientes.
+
+- **Melhorar a cobertura de testes**:
+  - Adicionar testes unitários e de integração para os novos provedores.
+  - Simular falhas nos provedores para validar o comportamento do fallback.
+
+- **Documentação**:
+  - Atualizar a documentação para incluir instruções de configuração e uso dos novos provedores.
+
+---
+
+## 📖 Padrões de Commit
+
+Este projeto segue o padrão [_Conventional Commits_](https://www.conventionalcommits.org/):
+
+---
+
+## 📝 Licença
+
+Este projeto está sob a licença MIT. Consulte o arquivo `LICENSE` para mais detalhes.
