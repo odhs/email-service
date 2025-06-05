@@ -11,21 +11,24 @@
   </parent>
   <groupId>br.com.shdo</groupId>
   <artifactId>email_service</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0.0</version>
   <name>email_service</name>
   <description>Email Service Example</description>
   <url />
   <licenses>
-    <license />
+    <license>
+      <name>MIT License</name>
+      <url>https://opensource.org/licenses/MIT</url>
+    </license>
   </licenses>
   <developers>
     <developer />
   </developers>
   <scm>
-    <connection />
-    <developerConnection />
+    <connection>scm:git:git://github.com/odhs/email-service.git</connection>
+    <developerConnection>scm:git:ssh://github.com/odhs/email-service.git</developerConnection>
     <tag />
-    <url />
+    <url>https://github.com/odhs/email-service</url>
   </scm>
   <properties>
     <java.version>24</java.version>
