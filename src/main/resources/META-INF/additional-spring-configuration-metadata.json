@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "email.source",
+      "type": "java.lang.String",
+      "description": "Valid email address that will be used as the source for sending emails. It must the same as the one configured in the SMTP server."
+    }
+  ]
+}
