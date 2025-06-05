@@ -1,30 +1,71 @@
-# Exemplo de Microsserviço _Amazon Simple Service Email_ em _Java Springboot_
+# 📬 _Email Service_ - Microsserviço em _Java Springboot_
 
-Este projeto é um microsserviço desenvolvido em _Java Spring Boot_ que utiliza o _Amazon Simple Email Service (SES)_ para envio de emails. Ele segue o padrão de arquitetura _Clean Architecture_, permitindo flexibilidade para trocar o provedor de email no futuro.
+Este projeto é um microsserviço _backend_ de uma API Restfull desenvolvida utilizando _Java Spring Boot_ com conexão com o _Amazon Simple Email Service (SES)_ para envio de emails. Seguindos os conceitos da Arquitetura Limpa (_Clean Architecture_), permitindo flexibilidade para trocar o provedor de email no futuro.
 
-Essa aplicação recebe um `JSON` por `POST` _APIRest_ com parâmetros para um email e envia email usando o serviço de email.
+Essa aplicação recebe um `JSON` por requisição `POST` com parâmetros para disparar um email e envia email usando um provedor de email.
+
+No futuro este sistema fornecerá uma abstração entre dois provedores de serviços de e-mail diferentes, se um dos serviços cair, ele poderá ser transferido rapidamente para outro provedor sem afetar os clientes.
+
+---
+
+## 📋 Funcionalidades
+
+- Envio de emails utilizando o _Amazon SES_.
+- Estrutura modular baseada em Arquitetura Limpa (_Clean Architecture_).
+- Suporte para múltiplos provedores de email (ex.: _SendGrid_, _Mailgun_, etc.).
+- Configuração de credenciais via variáveis de ambiente.
+
+---
+
+## 🌐 API _Endpoints_
+
+A API fornece os seguintes _endpoints_:
+
+**POST SendEmail**
+
+```markdown
+POST /api/email/send –  Enviar um novo e-mail
+```
+
+```json
+{
+  "to": "example@example.com",
+  "subject": "Assunto do Email",
+  "body": "Body do email"
+}
+```
+
+## 🛠️ Tecnologias Utilizadas
+
+- [**_Java 24_**](https://jdk.java.net/24/)
+- [**_Spring Boot_ 3.x**](https://start.spring.io/)
+- [**_Amazon SES SDK_**](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/SES.html#constructor-property)
+- [**_Maven_**](https://maven.apache.org/download.cgi) (Adicionado durante a configuração no _SpringBoot_)
+- **_Lombok_** (Adicionado durante a configuração no _SpringBoot_)
+
+---
 
 ## 🚀 Como Executar o Projeto
 
-### Pré-requisitos
+### Passo 1 - Pré-requisitos
 
 - **_Java 24_** ou superior instalado. [Java 24 Download](https://jdk.java.net/24/).
 - **_Maven_** instalado _ou_ uma IDE como [VSCode](https://code.visualstudio.com/)(com Extensões para _SpringBoot_) ou [IntelliJ IDEA](https://www.jetbrains.com/pt-br/idea/)
 - Conta na **AWS** com o serviço _SES_ configurado.
 - Configuração das variáveis de ambiente para as credenciais da AWS.
 
-### Passo 1
+### Passo 2
 
-1. Clone o repositório:
+Clone o repositório:
 
    ```bash
    git clone https://github.com/seu-usuario/email-service.git
    cd email-service
    ```
 
-### Passo 2: _Amazon SES_
+### Passo 3: _Amazon SES_
 
-Caso queria compilar com outra versão siga abaixo o PULE este passo.
+Caso queria compilar com outra versão siga abaixo o **PULE** este passo.
 
 Para descobrir a última versão e configurações da dependência `aws-java-sdk-ses` que está no arquivo `pom.xml`, você pode consultar o repositório oficial do _Maven Central_. Siga os passos abaixo:
 
@@ -46,48 +87,68 @@ Para descobrir a última versão e configurações da dependência `aws-java-sdk
 
 5. Atualize seu `pom.xml` com a nova versão.
 
-### Passo 3: No web site da [_AWS_](https://aws.amazon.com/)
+### Passo 4 No painel de controle da [_AWS_](https://aws.amazon.com/)
 
 #### _Amazon Simple Email Services_
 
-Após logar no AWS você precisa registrar uma identidade no [SES](https://us-east-1.console.aws.amazon.com/ses/home?region=us-east-1#/identities) (Simple Email Service). Adicione o email e verifique.
+Após logar no AWS você precisa registrar uma identidade no [SES](https://us-east-1.console.aws.amazon.com/ses/home?region=us-east-1#/identities) (_Simple Email Service_). Adicione o email e verifique para se tornar uma identidade verificada.
 
 #### IAM
 
 Criar um novo usuário [IAM User](https://us-east-1.console.aws.amazon.com/iam/home?region=us-east-1#/users) para representar a aplicação. Com única permissão de _AmazonSESFullAccess_. E crie uma chave para esse usuário.
-Essa é a opção mais prática para testes. Em produção a aplicação estaria hospedada e rodando em algum lugar, como em um EC2 (Máquina Virtual da Amazon) e então haveria uma regra (role) de permissão de acesso a este usuário.
+Essa é a opção mais prática para testes. Em produção a aplicação estaria hospedada e rodando em algum lugar, como em um EC2 (Máquina Virtual da _Amazon_) e então haveria uma regra (role) de permissão de acesso a este usuário. O aviso abaixo será mostrado, ignore para rodar localmente.
 
 > **Nota:** Atribua um perfil do IAM a recursos de computação, como instâncias do EC2 ou funções do Lambda, para fornecer automaticamente credenciais temporárias para habilitar o acesso.
 
-### Passo 4: Variáveis de Ambiente
+### Passo 5: Variáveis de Ambiente
 
-1. **Defina as variáveis de ambiente no sistema operacional:**
+As variáveis de sistema necessárias são:
 
-   No _Windows_ (via Prompt de Comando ou PowerShell):
+- `AWS_ACCESS_KEY_ID`: Chave de acesso da AWS.
+- `AWS_SECRET_KEY`: Chave secreta da AWS.
+- `AWS_REGION`: Região onde o serviço _SES_ está configurado (ex.: `us-east-1`).
+- `EMAIL_SOURCE`: Endereço de email verificado no _SES_ para envio.
 
-   ```cmd
-   set AWS_ACCESS_KEY_ID=<SEU_AWS_ACCESS_KEY_ID>
-   set AWS_SECRET_KEY=<SEU_SECRET_KEY>
-   set AWS_REGION=us-east-1
-   set EMAIL_SOURCE=<SEU_EMAIL_CONFIGURADO_NA_AWS>
-   ```
-
-   No _Linux/macOS_ (via terminal):
-
-   ```bash
-   export AWS_ACCESS_KEY_ID=<SEU_AWS_ACCESS_KEY_ID>
-   export AWS_SECRET_KEY=<SEU_SECRET_KEY>
-   export AWS_REGION=us-east-1
-   export EMAIL_SOURCE=<SEU_EMAIL_CONFIGURADO_NA_AWS>
-   ```
-
-Ou coloque as informações no arquivo `application.properties` no lugar das chamadas para variáveis de ambiente:
+Preencha as variáveis de ambiente em um arquivo `.env` na raiz do projeto, você pode usar o arquivo `.env-sample` como exemplo e renomea-lo para `.env`.
 
 ```sh
-aws.accessKeyId=${AWS_ACCESS_KEY_ID}
-aws.secretKey=${AWS_SECRET_KEY}
-aws.region=${AWS_REGION}
-email.source=${EMAIL_SOURCE}
+# AWS Credentials
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_KEY=
+AWS_REGION=us-east-1
+# Email Configuration
+EMAIL_SOURCE=
+```
+
+OU
+
+**Defina as variáveis de ambiente no sistema operacional:**
+
+#### No Windows (PowerShell)
+
+```powershell
+$Env:AWS_ACCESS_KEY_ID = "sua_access_key_id"
+$Env:AWS_SECRET_KEY = "sua_secret_key"
+$Env:AWS_REGION = "us-east-1"
+$Env:EMAIL_SOURCE = "seu_email_verificado@exemplo.com"
+```
+
+#### No Windows (Prompt de Comando)
+
+```bash
+set AWS_ACCESS_KEY_ID=sua_access_key_id
+set AWS_SECRET_KEY=sua_secret_key
+set AWS_REGION=us-east-1
+set EMAIL_SOURCE=seu_email_verificado@exemplo.com
+```
+
+#### No Linux/macOS
+
+```bash
+export AWS_ACCESS_KEY_ID="sua_access_key_id"
+export AWS_SECRET_KEY="sua_secret_key"
+export AWS_REGION="us-east-1"
+export EMAIL_SOURCE="seu_email_verificado@exemplo.com"
 ```
 
 Pronto, o projeto está configurado e pronto para rodar.
