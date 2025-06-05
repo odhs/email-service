@@ -56,7 +56,7 @@ POST /api/email/send –  Enviar um novo e-mail
 ### Pré-requisitos
 
 - **_Java 24_** ou superior instalado. [Java 24 Download](https://jdk.java.net/24/).
-- **_Maven_** instalado _ou_ uma IDE como [VSCode](https://code.visualstudio.com/)(com Extensões para _SpringBoot_) ou [IntelliJ IDEA](https://www.jetbrains.com/pt-br/idea/)
+- **_Maven_** instalado _ou_ uma IDE como [VSCode](https://code.visualstudio.com/) (com Extensões para _SpringBoot_) ou [IntelliJ IDEA](https://www.jetbrains.com/pt-br/idea/)
 - Conta na **AWS** com o serviço _SES_ configurado.
 - Configuração das variáveis de ambiente para as credenciais da AWS.
 
@@ -124,9 +124,6 @@ export EMAIL_SOURCE="seu_email_verificado@exemplo.com"
    mvn clean package
    java -jar target/email_service-0.0.1-SNAPSHOT.jar
    ```
-
-3. Acesse a aplicação em:  
-   [http://localhost:8080](http://localhost:8080)
 
 ---
 
