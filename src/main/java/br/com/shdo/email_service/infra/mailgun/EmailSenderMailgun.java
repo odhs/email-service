@@ -1,4 +1,4 @@
-package br.com.shdo.email_service.infra.mail_gun;
+package br.com.shdo.email_service.infra.mailgun;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ import br.com.shdo.email_service.core.exceptions.EmailServiceException;
  */
 @Primary
 @Service
-public class EmailSenderMailGun implements EmailSenderGateway {
+public class EmailSenderMailgun implements EmailSenderGateway {
 
   @Value("${mailgun.secretKey}")
   private String apiKey;
