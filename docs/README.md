@@ -1,5 +1,7 @@
 # 📬 _Email Service_ - Microsserviço em _Java Springboot_
 
+Este projeto destina-se para o ensino, então este README apresenta informações mais completas sobre a arquitetura.
+
 Este projeto é um microsserviço _backend_ de uma API Restfull desenvolvida utilizando _Java Spring Boot_ com conexão com o _Amazon Simple Email Service (SES)_ para envio de emails. Seguindos os conceitos da Arquitetura Limpa (_Clean Architecture_), permitindo flexibilidade para trocar o provedor de email no futuro.
 
 Essa aplicação recebe um `JSON` por requisição `POST` com parâmetros para disparar um email e envia email usando um provedor de email.

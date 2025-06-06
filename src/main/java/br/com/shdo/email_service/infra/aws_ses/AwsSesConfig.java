@@ -9,6 +9,25 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClientBuilder;
 
+/**
+ * Configuration class for AWS SES (Simple Email Service).
+ * 
+ * This class sets up the necessary AWS SES client using credentials and region
+ * specified in the application's properties file.
+ * 
+ * Properties:
+ * - aws.region: The AWS region where the SES service is hosted.
+ * - aws.accessKeyId: The AWS access key ID for authentication.
+ * - aws.secretKey: The AWS secret key for authentication.
+ * 
+ * Beans:
+ * - AmazonSimpleEmailService: Configures and provides an instance of 
+ *   AmazonSimpleEmailService for sending emails using AWS SES.
+ * 
+ * Dependencies:
+ * - AWS SDK for Java.
+ * - Spring Framework for dependency injection and configuration.
+ */
 @Configuration
 public class AwsSesConfig {
   

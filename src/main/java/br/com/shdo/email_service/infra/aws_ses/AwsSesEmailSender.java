@@ -14,6 +14,38 @@ import com.amazonaws.services.simpleemail.model.SendEmailRequest;
 import br.com.shdo.email_service.adapters.EmailSenderGateway;
 import br.com.shdo.email_service.core.exceptions.EmailServiceException;
 
+/**
+ * Service implementation for sending emails using AWS Simple Email Service (SES).
+ * This class integrates with AWS SES to send emails with specified recipients, subjects, and bodies.
+ * 
+ * <p>Dependencies:
+ * <ul>
+ *   <li>AmazonSimpleEmailService: AWS SDK client for interacting with SES.</li>
+ *   <li>Spring @Value annotation for injecting the email source from application properties.</li>
+ * </ul>
+ * 
+ * <p>Usage:
+ * <pre>
+ * {@code
+ * AwsSesEmailSender emailSender = new AwsSesEmailSender(amazonSimpleEmailService);
+ * emailSender.sendEmail("recipient@example.com", "Subject", "Email body");
+ * }
+ * </pre>
+ * 
+ * <p>Throws:
+ * <ul>
+ *   <li>EmailServiceException: If the email fails to send due to an AWS service error.</li>
+ * </ul>
+ * 
+ * <p>Configuration:
+ * Ensure the following property is set in your application configuration:
+ * <ul>
+ *   <li><code>email.source</code>: The email address used as the sender.</li>
+ * </ul>
+ * 
+ * @author Sérgio Oliveira
+ * @since 1.0.0
+ */
 @Service
 public class AwsSesEmailSender implements EmailSenderGateway {
 
