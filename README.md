@@ -46,6 +46,7 @@ POST /api/email/send –  Enviar um novo e-mail
 - [**_Java 24_**](https://jdk.java.net/24/)
 - [**_Spring Boot_ 3.x**](https://start.spring.io/)
 - [**_Amazon SES SDK_**](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/SES.html#constructor-property)
+- [**_Mailgun_**](https://www.mailgun.com/)
 - [**_Maven_**](https://maven.apache.org/download.cgi) (Adicionado durante a configuração no _SpringBoot_)
 - **_Lombok_** (Adicionado durante a configuração no _SpringBoot_)
 
@@ -183,18 +184,17 @@ Veja também o diagrama de classes feito em:
 ## 📝 TODO
 
 - **Adicionar suporte a múltiplos provedores de email**:
-
-  - Implementar integração com provedores como _SendGrid_, _Mailgun_ e _SparkPost_.
-  - Criar uma lógica de fallback para alternar automaticamente entre provedores caso um deles falhe.
-  - Garantir que o serviço possa ser transferido rapidamente para outro provedor sem afetar os clientes.
-
+  - [x] Implementar integração com provedores como _SendGrid_, _Mailgun_ e _SparkPost_.
+  - [ ] Criar uma lógica de fallback para alternar automaticamente entre provedores caso um deles falhe.
+  - [ ] Garantir que o serviço possa ser transferido rapidamente para outro provedor sem afetar os clientes.
+  
 - **Melhorar a cobertura de testes**:
 
-  - Adicionar testes unitários e de integração para os novos provedores.
-  - Simular falhas nos provedores para validar o comportamento do fallback.
+  - [ ] Adicionar testes unitários e de integração para os novos provedores.
+  - [ ] Simular falhas nos provedores para validar o comportamento do fallback.
 
 - **Documentação**:
-  - Atualizar a documentação para incluir instruções de configuração e uso dos novos provedores.
+  - [ ] Atualizar a documentação para incluir instruções de configuração e uso dos novos provedores.
 
 ---
 

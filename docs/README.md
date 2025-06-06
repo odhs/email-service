@@ -2,7 +2,7 @@
 
 Este projeto destina-se para o ensino, então este README apresenta informações mais completas sobre a arquitetura.
 
-Este projeto é um microsserviço _backend_ de uma API Restfull desenvolvida utilizando _Java Spring Boot_ com conexão com o _Amazon Simple Email Service (SES)_ para envio de emails. Seguindos os conceitos da Arquitetura Limpa (_Clean Architecture_), permitindo flexibilidade para trocar o provedor de email no futuro.
+Este projeto é um microsserviço _backend_ de uma API Restfull desenvolvida utilizando _Java Spring Boot_ com conexão com o _Amazon Simple Email Service (SES)_ ou _Mailgun_ para envio de emails. Seguindos os conceitos da Arquitetura Limpa (_Clean Architecture_), permitindo flexibilidade para trocar o provedor de email.
 
 Essa aplicação recebe um `JSON` por requisição `POST` com parâmetros para disparar um email e envia email usando um provedor de email.
 
@@ -12,7 +12,7 @@ No futuro este sistema fornecerá uma abstração entre dois provedores de servi
 
 ## 📋 Funcionalidades
 
-- Envio de emails utilizando o _Amazon SES_.
+- Envio de emails utilizando o _Amazon SES_ ou _Mailgun_
 - Estrutura modular baseada em Arquitetura Limpa (_Clean Architecture_).
 - Suporte para múltiplos provedores de email (ex.: _SendGrid_, _Mailgun_, etc.).
 - Configuração de credenciais via variáveis de ambiente.
@@ -42,6 +42,7 @@ POST /api/email/send –  Enviar um novo e-mail
 - [**_Java 24_**](https://jdk.java.net/24/)
 - [**_Spring Boot_ 3.x**](https://start.spring.io/)
 - [**_Amazon SES SDK_**](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/SES.html#constructor-property)
+- [**_Mailgun_**](https://www.mailgun.com/)
 - [**_Maven_**](https://maven.apache.org/download.cgi) (Adicionado durante a configuração no _SpringBoot_)
 - **_Lombok_** (Adicionado durante a configuração no _SpringBoot_)
 
@@ -311,16 +312,16 @@ Veja também o diagrama de classes feito em:
 ## 📝 TODO
 
 - **Adicionar suporte a múltiplos provedores de email**:
-  - Implementar integração com provedores como _SendGrid_, _Mailgun_ e _SparkPost_.
-  - Criar uma lógica de fallback para alternar automaticamente entre provedores caso um deles falhe.
-  - Garantir que o serviço possa ser transferido rapidamente para outro provedor sem afetar os clientes.
+  - [x] Implementar integração com provedores como _SendGrid_, _Mailgun_ e _SparkPost_.
+  - [ ] Criar uma lógica de fallback para alternar automaticamente entre provedores caso um deles falhe.
+  - [ ] Garantir que o serviço possa ser transferido rapidamente para outro provedor sem afetar os clientes.
 
 - **Melhorar a cobertura de testes**:
-  - Adicionar testes unitários e de integração para os novos provedores.
-  - Simular falhas nos provedores para validar o comportamento do fallback.
+  - [ ] Adicionar testes unitários e de integração para os novos provedores.
+  - [ ] Simular falhas nos provedores para validar o comportamento do fallback.
 
 - **Documentação**:
-  - Atualizar a documentação para incluir instruções de configuração e uso dos novos provedores.
+  - [ ] Atualizar a documentação para incluir instruções de configuração e uso dos novos provedores.
 
 Outros provedores de email:
 
