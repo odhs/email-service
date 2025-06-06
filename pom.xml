@@ -66,6 +66,11 @@
       <artifactId>aws-java-sdk-ses</artifactId>
       <version>1.12.785</version>
     </dependency>
+    <dependency>
+      <groupId>com.mashape.unirest</groupId>
+      <artifactId>unirest-java</artifactId>
+      <version>1.4.9</version>
+    </dependency>
   </dependencies>
 
   <build>
