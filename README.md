@@ -4,17 +4,17 @@
 
 O [README.md](docs/README.md) completo encontra-se em `docs/README.md`.
 
-Este projeto é um microsserviço _backend_ de uma API Restfull desenvolvida utilizando _Java Spring Boot_ com conexão com o _Amazon Simple Email Service (SES)_ para envio de emails. Seguindos os conceitos da Arquitetura Limpa (_Clean Architecture_), permitindo flexibilidade para trocar o provedor de email no futuro.
+Este projeto é um microsserviço _backend_ de uma API Restfull desenvolvida utilizando _Java Spring Boot_ com conexão com o _Amazon Simple Email Service (SES)_ ou _Mailgun_ para envio de emails. Seguindos os conceitos da Arquitetura Limpa (_Clean Architecture_), permitindo flexibilidade para trocar o provedor de email.
 
 Essa aplicação recebe um `JSON` por requisição `POST` com parâmetros para disparar um email e envia email usando um provedor de email.
 
-No futuro este sistema fornecerá uma abstração entre dois provedores de serviços de e-mail diferentes, se um dos serviços cair, ele poderá ser transferido rapidamente para outro provedor sem afetar os clientes.
+Este sistema fornece uma abstração entre dois provedores de serviços de e-mail diferentes, se um dos serviços cair,o email é rapidamente enviado para outro provedor sem afetar os clientes.
 
 ---
 
 ## 📋 Funcionalidades
 
-- Envio de emails utilizando o _Amazon SES_.
+- Envio de emails utilizando o _Amazon SES_ ou _Mailgun_
 - Estrutura modular baseada em Arquitetura Limpa (_Clean Architecture_).
 - Suporte para múltiplos provedores de email (ex.: _SendGrid_, _Mailgun_, etc.).
 - Configuração de credenciais via variáveis de ambiente.
@@ -184,10 +184,12 @@ Veja também o diagrama de classes feito em:
 ## 📝 TODO
 
 - **Adicionar suporte a múltiplos provedores de email**:
+
   - [x] Implementar integração com provedores como _SendGrid_, _Mailgun_ e _SparkPost_.
-  - [ ] Criar uma lógica de fallback para alternar automaticamente entre provedores caso um deles falhe.
-  - [ ] Garantir que o serviço possa ser transferido rapidamente para outro provedor sem afetar os clientes.
-  
+  - [x] Criar uma lógica de fallback para alternar automaticamente entre provedores caso um deles falhe.
+  - [x] Garantir que o serviço possa ser transferido rapidamente para outro provedor sem afetar os clientes.
+  - [ ] Apresentar informação de qual serviço foi usado e se houve sucesso ou falha. Se um serviço falhar fazer fallback para o próximo e manter-se no próximo até que falhe para voltar ao primário.
+
 - **Melhorar a cobertura de testes**:
 
   - [ ] Adicionar testes unitários e de integração para os novos provedores.

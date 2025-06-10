@@ -71,7 +71,7 @@ public class AwsSesEmailSender implements EmailSenderGateway {
     try {
       this.amazonSimpleEmailService.sendEmail(request);
     } catch (AmazonServiceException e) {
-      throw new EmailServiceException("Failed to send email: " + e.getMessage(), e);
+      throw new EmailServiceException("Failed to send email by Amazon SES: " + e.getMessage(), e);
     }
   }
 

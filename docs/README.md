@@ -1,12 +1,12 @@
 # 📬 _Email Service_ - Microsserviço em _Java Springboot_
 
-Este projeto destina-se para o ensino, então este README apresenta informações mais completas sobre a arquitetura.
+Este projeto destina-se para o ensino, então este README apresenta informações mais completas sobre a arquitetura limpa e o padrão de projeto cadeia de responsabilidades com fallback.
 
 Este projeto é um microsserviço _backend_ de uma API Restfull desenvolvida utilizando _Java Spring Boot_ com conexão com o _Amazon Simple Email Service (SES)_ ou _Mailgun_ para envio de emails. Seguindos os conceitos da Arquitetura Limpa (_Clean Architecture_), permitindo flexibilidade para trocar o provedor de email.
 
 Essa aplicação recebe um `JSON` por requisição `POST` com parâmetros para disparar um email e envia email usando um provedor de email.
 
-No futuro este sistema fornecerá uma abstração entre dois provedores de serviços de e-mail diferentes, se um dos serviços cair, ele poderá ser transferido rapidamente para outro provedor sem afetar os clientes.
+Este sistema fornece uma abstração entre dois provedores de serviços de e-mail diferentes, se um dos serviços cair,o email é rapidamente enviado para outro provedor sem afetar os clientes.
 
 ---
 
@@ -26,7 +26,7 @@ A API fornece os seguintes _endpoints_:
 **POST SendEmail**
 
 ```markdown
-POST /api/email/send –  Enviar um novo e-mail
+POST /api/email/send – Enviar um novo e-mail
 ```
 
 ```json
@@ -61,10 +61,10 @@ POST /api/email/send –  Enviar um novo e-mail
 
 Clone o repositório:
 
-   ```bash
-   git clone https://github.com/seu-usuario/email-service.git
-   cd email-service
-   ```
+```bash
+git clone https://github.com/seu-usuario/email-service.git
+cd email-service
+```
 
 ### Passo 3: _Amazon SES_
 
@@ -265,12 +265,14 @@ Exceções personalizadas fazem parte do CORE da aplicação, porque fazem parte
 - **Core**
 
   - `EmailSenderUseCase` (Interface): Define o contrato para envio de emails.
-  - `EmailRequest` (Record): Representa a solicitação de envio de email.
+  - `EmailRequest` (Record): Representa a solicitação de envio de email (DTO - _Data Transfer Object)_
   - `EmailServiceException` (Classe): Exceção personalizada para erros no serviço de email.
 
 - **Application**
 
   - `EmailSenderService` (Classe): Implementa o caso de uso definido em `EmailSenderUseCase`.
+
+  - `FallbackEmailSenderGateway` (Classe): Implementa lógica de fallback para alternar entre provedores de email caso um deles falhe.
 
 - **Adapters**
 
@@ -278,8 +280,14 @@ Exceções personalizadas fazem parte do CORE da aplicação, porque fazem parte
 
 - **Infra**
 
-  - `AwsSesEmailSender` (Classe): Implementa `EmailSenderGateway` para enviar emails usando o AWS SES.
-  - `AwsSesConfig` (Classe): Configuração do cliente AWS SES.
+  - **aws_ses**:
+    - `AwsSesEmailSender` (Classe): Implementa `EmailSenderGateway` para enviar emails usando o _Amazon SES_.
+    - `AwsSesConfig` (Classe): Configuração do cliente _Amazon SES_.
+
+  -**mailgun**:
+
+  - `MailgunEmailSender` (Classe): Implementa `EmailSenderGateway` para enviar emails usando o _Mailgun_.
+  - `MailgunConfig` (Classe): Configuração do cliente _Mailgun_.
 
 - **Controllers**
 
@@ -289,8 +297,21 @@ Exceções personalizadas fazem parte do CORE da aplicação, porque fazem parte
 
 - `EmailSenderService` implementa `EmailSenderUseCase`.
 - `AwsSesEmailSender` implementa `EmailSenderGateway`.
-- `EmailSenderService` depende de `EmailSenderGateway`.
+- `MailgunEmailSender` implementa `EmailSenderGateway`.
+- `FallbackEmailSenderGateway` implementa `EmailSenderGateway`.
+- `EmailSenderService` depende de `FallbackEmailSenderGateway`.
 - `EmailSenderController` depende de `EmailSenderService`.
+
+### Design Pattern
+
+- **_Chain of Responsibility_:**  
+  Tem-se uma cadeia de possíveis provedores de email. O primeiro tenta executar a ação (enviar o email). Se falhar (exceção), o próximo da cadeia é chamado, e assim por diante.
+  A classe `FallbackEmailSenderGateway` tenta o AWS-SES e, se não funcionar, passa para o Mailgun.
+
+- **_Fallback Strategy_:**  
+  É uma variação do padrão Strategy, onde você define estratégias alternativas para um serviço. Se a principal falhar, uma alternativa é usada automaticamente.
+
+Então a implementação é um exemplo prático de **_Chain of Responsibility_** com **_fallback_**, muito comum em sistemas resilientes que precisam garantir disponibilidade mesmo diante de falhas em serviços externos.
 
 ### Diagrama de Classes
 
@@ -312,11 +333,14 @@ Veja também o diagrama de classes feito em:
 ## 📝 TODO
 
 - **Adicionar suporte a múltiplos provedores de email**:
+
   - [x] Implementar integração com provedores como _SendGrid_, _Mailgun_ e _SparkPost_.
-  - [ ] Criar uma lógica de fallback para alternar automaticamente entre provedores caso um deles falhe.
-  - [ ] Garantir que o serviço possa ser transferido rapidamente para outro provedor sem afetar os clientes.
+  - [x] Criar uma lógica de fallback para alternar automaticamente entre provedores caso um deles falhe.
+  - [x] Garantir que o serviço possa ser transferido rapidamente para outro provedor sem afetar os clientes.
+  - [ ] Apresentar informação de qual serviço foi usado e se houve sucesso ou falha. Se um serviço falhar fazer fallback para o próximo e manter-se no próximo até que falhe para voltar ao primário.
 
 - **Melhorar a cobertura de testes**:
+
   - [ ] Adicionar testes unitários e de integração para os novos provedores.
   - [ ] Simular falhas nos provedores para validar o comportamento do fallback.
 

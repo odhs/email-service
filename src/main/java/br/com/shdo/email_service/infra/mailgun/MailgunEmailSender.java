@@ -1,10 +1,9 @@
 package br.com.shdo.email_service.infra.mailgun;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
-import com.mashape.unirest.http.HttpResponse; // unirest v1.4.9
-import com.mashape.unirest.http.JsonNode;
+//import com.mashape.unirest.http.HttpResponse; // unirest v1.4.9
+//import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
@@ -22,9 +21,8 @@ import br.com.shdo.email_service.core.exceptions.EmailServiceException;
  * such as sender, recipient, subject, and body of the email.
  * 
  */
-@Primary
 @Service
-public class EmailSenderMailgun implements EmailSenderGateway {
+public class MailgunEmailSender implements EmailSenderGateway {
 
   @Value("${mailgun.secretKey}")
   private String apiKey;
@@ -32,7 +30,8 @@ public class EmailSenderMailgun implements EmailSenderGateway {
   @Override
   public void sendEmail(String to, String subject, String body) {
     try {
-      HttpResponse<JsonNode> response = Unirest
+      //HttpResponse<JsonNode> response = Unirest
+      Unirest
           .post("https://api.mailgun.net/v3/sandbox71f1695b8569494c9f1520fd69a8feb4.mailgun.org/messages")
           .basicAuth("api", apiKey)
           .queryString("from", "Mailgun Sandbox <postmaster@sandbox71f1695b8569494c9f1520fd69a8feb4.mailgun.org>")
@@ -41,10 +40,10 @@ public class EmailSenderMailgun implements EmailSenderGateway {
           .queryString("text", "body")
           .asJson();
 
-      response.getBody();
+      //response.getBody();
 
     } catch (UnirestException e) {
-      throw new EmailServiceException("Failed to send email: " + e.getMessage(), e);
+      throw new EmailServiceException("Failed to send email by Mailgun: " + e.getMessage(), e);
     }
   }
 }
